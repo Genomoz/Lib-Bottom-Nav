@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.PopupMenu;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 import androidx.annotation.FontRes;
+import androidx.annotation.MenuRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.XmlRes;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -116,7 +118,7 @@ public class SmoothBottomBar extends View {
     private float _itemTextSize = d2p(getContext(),DEFAULT_TEXT_SIZE);
     @FontRes
     private int _itemFontFamily = INVALID_RES;
-    @XmlRes
+    @MenuRes
     private int _itemMenuRes = INVALID_RES;
     private int _itemActiveIndex = 0;
     private Menu menu;
@@ -278,16 +280,19 @@ public class SmoothBottomBar extends View {
         return _itemMenuRes;
     }
 
-    public void setItemMenuRes(@XmlRes int value) {
+    public void setItemMenuRes(@MenuRes int value) {
         _itemMenuRes = value;
-        PopupMenu popupMenu = new PopupMenu(getContext(), null);
-        popupMenu.inflate(value);
+        Context context = getContext();
+        PopupMenu popupMenu = new PopupMenu(context, null);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(value, popupMenu.getMenu());
         this.menu = popupMenu.getMenu();
         if (value != INVALID_RES) {
-            items = BottomBarParser.parse(getContext(), value);
+            items = new BottomBarParser(context, value).parse();
             invalidate();
         }
     }
+
 
     public int getItemActiveIndex() {
         return _itemActiveIndex;
@@ -597,7 +602,7 @@ public class SmoothBottomBar extends View {
     private void tintAndDrawIcon(BottomBarItem item, int index, Canvas canvas) {
         DrawableCompat.setTint(
                 item.icon,
-                index == itemActiveIndex ? currentIconTint : itemIconTint
+                index == getItemActiveIndex() ? currentIconTint : getItemIconTint()
         );
 
         item.icon.draw(canvas);
@@ -628,8 +633,8 @@ public class SmoothBottomBar extends View {
 
     private void onClickAction(int viewId) {
         exploreByTouchHelper.invalidateVirtualView(viewId);
-        if (viewId != itemActiveIndex) {
-            itemActiveIndex = viewId;
+        if (viewId != getItemActiveIndex()) {
+            _itemActiveIndex = viewId;
             if (onItemSelectedListener != null) {
                 onItemSelectedListener.onItemSelect(viewId);
             } else if (onItemSelectedListenerLambda != null) {
@@ -652,57 +657,65 @@ public class SmoothBottomBar extends View {
         if (!items.isEmpty()) {
             for (int i = 0; i < items.size(); i++) {
                 BottomBarItem item = items.get(i);
-                if (i == itemActiveIndex) {
+                if (i == getItemActiveIndex()) {
                     animateAlpha(item, OPAQUE);
                 } else {
                     animateAlpha(item, TRANSPARENT);
                 }
             }
 
-            ValueAnimator.ofFloat(
+            ValueAnimator animator = ValueAnimator.ofFloat(
                     indicatorLocation,
-                    items.get(itemActiveIndex).rect.left
-            ).apply {
-                setDuration(itemAnimDuration);
-                setInterpolator(new DecelerateInterpolator());
-                addUpdateListener(animation -> {
+                    items.get(getItemActiveIndex()).rect.left
+            );
+            animator.setDuration(getItemAnimDuration());
+            animator.setInterpolator(new DecelerateInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
                     indicatorLocation = (float) animation.getAnimatedValue();
                     invalidate();
-                });
-                start();
-            }
+                }
+            });
+            animator.start();
 
-            ValueAnimator.ofObject(new ArgbEvaluator(), itemIconTint, itemIconTintActive).apply {
-                setDuration(itemAnimDuration);
-                addUpdateListener(animation -> {
+            ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), getItemIconTint(), getItemIconTintActive());
+            colorAnimator.setDuration(getItemAnimDuration());
+            colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
                     currentIconTint = (int) animation.getAnimatedValue();
                     invalidate();
-                });
-                start();
-            }
+                }
+            });
+            colorAnimator.start();
         }
     }
 
+
     private void animateAlpha(BottomBarItem item, int to) {
-        ValueAnimator.ofInt(item.alpha, to).apply {
-            setDuration(itemAnimDuration);
-            addUpdateListener(animation -> {
+        ValueAnimator animator = ValueAnimator.ofInt(item.alpha, to);
+        animator.setDuration(getItemAnimDuration());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
                 int value = (int) animation.getAnimatedValue();
                 item.alpha = value;
                 invalidate();
-            });
-            start();
-        }
+            }
+        });
+        animator.start();
     }
 
-    public void setupWithNavController(Menu menu, NavController navController) {
-        NavigationUI.setupWithNavController(menu, this, navController);
-    }
 
-    public void setupWithNavController(NavController navController) {
-        NavigationUI.setupWithNavController(menu, this, navController);
-        Navigation.setViewNavController(this, navController);
-    }
+//    public void setupWithNavController(Menu menu, NavController navController) {
+//        NavigationUI.setupWithNavController(menu, this, navController);
+//    }
+//
+//    public void setupWithNavController(NavController navController) {
+//        NavigationUI.setupWithNavController(menu, this, navController);
+//        Navigation.setViewNavController(this, navController);
+//    }
 
     public void setSelectedItem(int pos) {
         try {
@@ -746,39 +759,6 @@ public class SmoothBottomBar extends View {
         void onItemReselect(int pos);
     }
 
-    private static class BottomBarItem {
-        public String title;
-        public Drawable icon;
-        public RectF rect;
-        public int alpha;
-
-        public BottomBarItem(String title, Drawable icon) {
-            this.title = title;
-            this.icon = icon;
-            this.alpha = TRANSPARENT;
-        }
-    }
-
-    private static class BottomBarParser {
-        public static List<BottomBarItem> parse(Context context, @XmlRes int menuRes) {
-            MenuParser menuParser = new MenuParser(context);
-            try {
-                menuParser.parse(menuRes);
-            } catch (XmlPullParserException | IOException e) {
-                e.printStackTrace();
-            }
-            Menu menu = menuParser.getMenu();
-            List<BottomBarItem> items = new ArrayList<>();
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem menuItem = menu.getItem(i);
-                items.add(new BottomBarItem(
-                        menuItem.getTitle().toString(),
-                        menuItem.getIcon()
-                ));
-            }
-            return items;
-        }
-    }
 
     private static class MenuParser {
         private static final String XML_MENU_ITEM = "item";
@@ -909,61 +889,4 @@ public class SmoothBottomBar extends View {
         }
     }
 
-    private static class AccessibleExploreByTouchHelper extends ExploreByTouchHelper {
-        private final List<BottomBarItem> items;
-        private final Consumer<Integer> clickConsumer;
-
-        public AccessibleExploreByTouchHelper(View host, List<BottomBarItem> items, Consumer<Integer> clickConsumer) {
-            super(host);
-            this.items = items;
-            this.clickConsumer = clickConsumer;
-        }
-
-        @Override
-        protected int getVirtualViewAt(float x, float y) {
-            for (int i = 0; i < items.size(); i++) {
-                BottomBarItem item = items.get(i);
-                if (item.rect.contains(x, y)) {
-                    return i;
-                }
-            }
-            return ExploreByTouchHelper.INVALID_ID;
-        }
-
-        @Override
-        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
-            for (int i = 0; i < items.size(); i++) {
-                virtualViewIds.add(i);
-            }
-        }
-
-        @Override
-        protected void onPopulateEventForVirtualView(int virtualViewId, AccessibilityEvent event) {
-            event.setContentDescription(items.get(virtualViewId).title);
-            event.setClassName(SmoothBottomBar.class.getName());
-        }
-
-        @Override
-        protected void onPopulateNodeForVirtualView(int virtualViewId, AccessibilityNodeInfoCompat node) {
-            BottomBarItem item = items.get(virtualViewId);
-            node.setContentDescription(item.title);
-            node.setClassName(SmoothBottomBar.class.getName());
-            node.setBoundsInParent(new Rect(
-                    (int) item.rect.left,
-                    (int) item.rect.top,
-                    (int) item.rect.right,
-                    (int) item.rect.bottom
-            ));
-            node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
-        }
-
-        @Override
-        protected boolean onPerformActionForVirtualView(int virtualViewId, int action, Bundle arguments) {
-            if (action == AccessibilityNodeInfoCompat.ACTION_CLICK) {
-                clickConsumer.accept(virtualViewId);
-                return true;
-            }
-            return false;
-        }
-    }
 }

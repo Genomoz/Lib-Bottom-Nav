@@ -70,11 +70,7 @@ class BottomBarParser {
         }
 
         if (itemDrawable == null) {
-            try {
-                throw new Throwable("Item icon can not be null!");
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            throw new Throwable("Item icon can not be null!");
         }
 
         return new BottomBarItem(itemText, contentDescription != null ? contentDescription : itemText, itemDrawable, new RectF(), 0);

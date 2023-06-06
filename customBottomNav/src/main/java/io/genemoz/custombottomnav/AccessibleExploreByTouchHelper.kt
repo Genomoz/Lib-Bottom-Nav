@@ -4,11 +4,9 @@ import android.graphics.Rect
 import android.os.Bundle
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.customview.widget.ExploreByTouchHelper
-import io.genemoz.custombottomnav.BottomBarItem
-import io.genemoz.custombottomnav.SmoothBottomBar
 
 class AccessibleExploreByTouchHelper(
-    private val host : SmoothBottomBar,
+    private val host : CustomBottomBar,
     private val bottomBarItems : List<BottomBarItem>,
     private val onClickAction : (id : Int) -> Unit
 ) : ExploreByTouchHelper(host) {

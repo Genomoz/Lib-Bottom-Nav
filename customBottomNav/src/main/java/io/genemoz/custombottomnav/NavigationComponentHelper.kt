@@ -17,16 +17,16 @@ class NavigationComponentHelper {
 
         fun setupWithNavController(
             menu: Menu,
-            smoothBottomBar: SmoothBottomBar,
+            customBottomBar: CustomBottomBar,
             navController: NavController
         ) {
-            smoothBottomBar.onItemSelectedListener = object : OnItemSelectedListener {
+            customBottomBar.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelect(pos: Int): Boolean {
                     return NavigationUI.onNavDestinationSelected(menu.getItem(pos), navController)
                 }
             }
 
-            val weakReference = WeakReference(smoothBottomBar)
+            val weakReference = WeakReference(customBottomBar)
 
             navController.addOnDestinationChangedListener(object :
                 NavController.OnDestinationChangedListener {
@@ -47,7 +47,7 @@ class NavigationComponentHelper {
                         val menuItem = menu.getItem(h)
                         if (matchDestination(destination, menuItem.itemId)) {
                             menuItem.isChecked = true
-                            smoothBottomBar.itemActiveIndex = h
+                            customBottomBar.itemActiveIndex = h
                         }
                     }
                 }

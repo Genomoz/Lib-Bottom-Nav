@@ -26,7 +26,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import io.genemoz.custombottomnav.ext.d2p
 
-class SmoothBottomBar @JvmOverloads constructor(
+class CustomBottomBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.SmoothBottomBarStyle
@@ -288,82 +288,82 @@ class SmoothBottomBar @JvmOverloads constructor(
     private fun obtainStyledAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.SmoothBottomBar,
+            R.styleable.CustomBottomBar,
             defStyleAttr,
             0
         )
 
         try {
             barBackgroundColor = typedArray.getColor(
-                R.styleable.SmoothBottomBar_backgroundColor,
+                R.styleable.CustomBottomBar_backgroundColor,
                 barBackgroundColor
             )
             barIndicatorColor = typedArray.getColor(
-                R.styleable.SmoothBottomBar_indicatorColor,
+                R.styleable.CustomBottomBar_indicatorColor,
                 barIndicatorColor
             )
             barIndicatorRadius = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_indicatorRadius,
+                R.styleable.CustomBottomBar_indicatorRadius,
                 barIndicatorRadius
             )
             barSideMargins = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_sideMargins,
+                R.styleable.CustomBottomBar_sideMargins,
                 barSideMargins
             )
             barCornerRadius = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_cornerRadius,
+                R.styleable.CustomBottomBar_cornerRadius,
                 barCornerRadius
             )
             barCorners = typedArray.getInteger(
-                R.styleable.SmoothBottomBar_corners,
+                R.styleable.CustomBottomBar_corners,
                 barCorners
             )
             itemPadding = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_itemPadding,
+                R.styleable.CustomBottomBar_itemPadding,
                 itemPadding
             )
             itemTextColor = typedArray.getColor(
-                R.styleable.SmoothBottomBar_textColor,
+                R.styleable.CustomBottomBar_textColor,
                 itemTextColor
             )
             itemTextSize = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_textSize,
+                R.styleable.CustomBottomBar_textSize,
                 itemTextSize
             )
             itemIconSize = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_iconSize,
+                R.styleable.CustomBottomBar_iconSize,
                 itemIconSize
             )
             itemIconMargin = typedArray.getDimension(
-                R.styleable.SmoothBottomBar_iconMargin,
+                R.styleable.CustomBottomBar_iconMargin,
                 itemIconMargin
             )
             itemIconTint = typedArray.getColor(
-                R.styleable.SmoothBottomBar_iconTint,
+                R.styleable.CustomBottomBar_iconTint,
                 itemIconTint
             )
             itemBadgeColor = typedArray.getColor(
-                R.styleable.SmoothBottomBar_badgeColor,
+                R.styleable.CustomBottomBar_badgeColor,
                 itemBadgeColor
             )
             itemIconTintActive = typedArray.getColor(
-                R.styleable.SmoothBottomBar_iconTintActive,
+                R.styleable.CustomBottomBar_iconTintActive,
                 itemIconTintActive
             )
             itemActiveIndex = typedArray.getInt(
-                R.styleable.SmoothBottomBar_activeItem,
+                R.styleable.CustomBottomBar_activeItem,
                 itemActiveIndex
             )
             itemFontFamily = typedArray.getResourceId(
-                R.styleable.SmoothBottomBar_itemFontFamily,
+                R.styleable.CustomBottomBar_itemFontFamily,
                 itemFontFamily
             )
             itemAnimDuration = typedArray.getInt(
-                R.styleable.SmoothBottomBar_duration,
+                R.styleable.CustomBottomBar_duration,
                 itemAnimDuration.toInt()
             ).toLong()
             itemMenuRes = typedArray.getResourceId(
-                R.styleable.SmoothBottomBar_menu,
+                R.styleable.CustomBottomBar_menu,
                 itemMenuRes
             )
         } catch (e: Exception) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="SmoothBottomBar">
+    <declare-styleable name="CustomBottomBar">
         <attr name="menu" format="reference" />
         <attr name="backgroundColor" format="color" />
         <attr name="indicatorColor" format="color" />

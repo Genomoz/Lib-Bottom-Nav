@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Menu
@@ -25,6 +26,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import io.genemoz.custombottomnav.ext.d2p
+import java.util.Objects
 
 class CustomBottomBar @JvmOverloads constructor(
     context: Context,
@@ -705,4 +707,6 @@ class CustomBottomBar @JvmOverloads constructor(
         private const val OPAQUE = 255
         private const val TRANSPARENT = 0
     }
+
+
 }

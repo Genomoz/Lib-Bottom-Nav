@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:justificationMode="inter_word"
+        android:layout_centerInParent="true"
+        android:textColor="@color/black"
+        android:text="kdjfkaf fjkdfjlasdjf dkfj fadkfja djfkaf fjkdfjlasdjf dkfj fadkfja dk djfkaf fjkdfjlasdjf dkfj fadkfja dk djfkaf fjkdfjlasdjf dkfj fadkfja dk djfkaf fjkdfjlasdjf dkfj fadkfja dkdjfkaf fjkdfjlasdjf dkfj fadkfja dk djfkaf fjkdfjlasdjf dkfj fadkfja dkdjfkaf fjkdfjlasdjf dkfj fadkfja dk dkfjkd fkadjfk fjd kfjdkf afk adkf kdfdk fdkf dkfalk fjaldkfj "
+        android:textSize="16sp" />
+
+
     <io.genemoz.custombottomnav.CustomBottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"

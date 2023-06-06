@@ -382,8 +382,7 @@ class CustomBottomBar @JvmOverloads constructor(
         itemWidth = (width - (barSideMargins * 2)) / items.size
 
         // reverse items layout order if layout direction is RTL
-        val itemsToLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
-            && layoutDirection == LAYOUT_DIRECTION_RTL
+        val itemsToLayout = if (layoutDirection == LAYOUT_DIRECTION_RTL
         ) items.reversed() else items
 
         for (item in itemsToLayout) {

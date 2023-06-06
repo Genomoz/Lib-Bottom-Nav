@@ -7,15 +7,18 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import io.genemoz.custombottomnavlib.databinding.FragmentChatBinding;
+
 
 public class ChatFragment extends Fragment {
 
-
+    FragmentChatBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentChatBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 }

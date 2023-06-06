@@ -7,14 +7,18 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import io.genemoz.custombottomnavlib.databinding.FragmentMediaBinding;
+
 
 public class MediaFragment extends Fragment {
 
 
+    FragmentMediaBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentMediaBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 }

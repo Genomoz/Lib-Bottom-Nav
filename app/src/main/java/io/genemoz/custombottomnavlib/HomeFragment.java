@@ -8,14 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.genemoz.custombottomnavlib.databinding.FragmentChatBinding;
+import io.genemoz.custombottomnavlib.databinding.FragmentHomeBinding;
+
 
 public class HomeFragment extends Fragment {
 
+    FragmentHomeBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 }

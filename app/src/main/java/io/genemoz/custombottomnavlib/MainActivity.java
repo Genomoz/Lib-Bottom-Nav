@@ -30,13 +30,16 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int pos) {
-                if (pos == 0)
+                if (pos == 0) {
                     binding.viewPager.setCurrentItem(0);
+                    binding.bottomBar.setBadge(2);
+                }
                 else if (pos == 1)
                     binding.viewPager.setCurrentItem(1);
-                else if (pos == 2)
+                else if (pos == 2) {
                     binding.viewPager.setCurrentItem(2);
-                else if (pos == 3)
+                    binding.bottomBar.removeBadge(2);
+                } else if (pos == 3)
                     binding.viewPager.setCurrentItem(3);
                 else
                     binding.viewPager.setCurrentItem(0);
@@ -67,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.bottomBar.setBadge(2);
 
 
     }

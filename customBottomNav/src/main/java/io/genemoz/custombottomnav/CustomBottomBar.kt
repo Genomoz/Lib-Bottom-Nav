@@ -484,8 +484,7 @@ class CustomBottomBar @JvmOverloads constructor(
 
         val textHeight = (paintText.descent() + paintText.ascent()) / 2
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
-            && layoutDirection == LAYOUT_DIRECTION_RTL
+        if (layoutDirection == LAYOUT_DIRECTION_RTL
         ) {
             for ((index, item) in items.withIndex()) {
                 val textLength = paintText.measureText(item.title)
@@ -513,15 +512,24 @@ class CustomBottomBar @JvmOverloads constructor(
             for ((index, item) in items.withIndex()) {
                 val textLength = paintText.measureText(item.title)
 
+//                item.icon.mutate()
+//                item.icon.setBounds(
+//                    item.rect.centerX()
+//                        .toInt() - itemIconSize.toInt() / 2 - ((textLength / 2) * (1 - (OPAQUE - item.alpha) / OPAQUE.toFloat())).toInt(),
+//                    height / 2 - itemIconSize.toInt() / 2,
+//                    item.rect.centerX()
+//                        .toInt() + itemIconSize.toInt() / 2 - ((textLength / 2) * (1 - (OPAQUE - item.alpha) / OPAQUE.toFloat())).toInt(),
+//                    height / 2 + itemIconSize.toInt() / 2
+//                )
+
+                val iconLeft = item.rect.centerX().toInt() - itemIconSize.toInt() / 2 + (textLength / 2).toInt()
+                val iconTop = height / 2 - itemIconSize.toInt() / 2
+                val iconRight = item.rect.centerX().toInt() + itemIconSize.toInt() / 2 + (textLength / 2).toInt()
+                val iconBottom = height / 2 + itemIconSize.toInt() / 2
+
                 item.icon.mutate()
-                item.icon.setBounds(
-                    item.rect.centerX()
-                        .toInt() - itemIconSize.toInt() / 2 - ((textLength / 2) * (1 - (OPAQUE - item.alpha) / OPAQUE.toFloat())).toInt(),
-                    height / 2 - itemIconSize.toInt() / 2,
-                    item.rect.centerX()
-                        .toInt() + itemIconSize.toInt() / 2 - ((textLength / 2) * (1 - (OPAQUE - item.alpha) / OPAQUE.toFloat())).toInt(),
-                    height / 2 + itemIconSize.toInt() / 2
-                )
+                item.icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+
                 //set badge indicator
                 if(badge_arr.contains(index)){
                     canvas.drawCircle(
